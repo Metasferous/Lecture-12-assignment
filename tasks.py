@@ -21,7 +21,7 @@ show_customer_receipt(user_type='admin')
 
 
 def is_admin(func):
-    def wrapper(**kwargs):
+    def wrapper(*args, **kwargs):
         try:
             if kwargs.get('user_type') != 'admin':
                 raise ValueError('Permission denied')
@@ -98,7 +98,7 @@ add("1", "2")
 
 
 def check_types(func):
-    def wrapper(*args):
+    def wrapper(*args, **kwargs):
         try:
             arg_names = inspect.signature(func).parameters
             req_arg_types = [arg_names[arg].annotation for arg in arg_names]
@@ -109,7 +109,7 @@ def check_types(func):
                               if r_type != g_type}
             if len(incorrect_args) != 0:
                 raise TypeError
-            func(*args)
+            func(*args, **kwargs)
         except TypeError:
             print('TypeError(')
             for arg in incorrect_args:
